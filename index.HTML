@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة المبيعات والمشتريات والديون</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563EB;
+            --secondary: #2563EB;
+            --surface: rgba(255, 255, 255, 0.85);
+            --text: #1F2937;
+            --text-light: #6B7280;
+            --bg-light: #F3F4F6;
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 12px;
+            --spacing-lg: 16px;
+            --spacing-xl: 24px;
+            --spacing-2xl: 32px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #F3F4F6 0%, #E5E7EB 100%);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        /* Header */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transform: translateY(-100%);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+
+        .header.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-lg) 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--spacing-xl);
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #1D4ED8 100%);
+            color: white;
+            padding: 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('images/background.png') center/cover no-repeat;
+            z-index: 1;
+            filter: brightness(0.4) contrast(1.1) saturate(1.2);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(29, 78, 216, 0.2) 100%);
+            z-index: 2;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 800px;
+            padding: var(--spacing-lg);
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: var(--spacing-xl);
+            line-height: 1.1;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-2xl);
+            opacity: 0.95;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.5), 1px 1px 2px rgba(37, 99, 235, 0.3);
+            color: #e0f2fe;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            background: var(--surface);
+            color: var(--primary);
+            padding: var(--spacing-lg) var(--spacing-2xl);
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .button-icon {
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+        }
+
+        .hero-image {
+            display: none;
+        }
+
+        /* Problem Section */
+        .problem {
+            padding: 80px 0;
+            background: var(--surface);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: var(--spacing-2xl);
+            color: var(--text);
+        }
+
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .problem-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: var(--spacing-2xl);
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .problem-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .problem-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--primary);
+        }
+
+        /* Solution Section */
+        .solution {
+            padding: 80px 0;
+            background: var(--bg-light);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: var(--spacing-2xl);
+            border-radius: 16px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), #1D4ED8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--text);
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Screenshots Section */
+        .screenshots {
+            padding: 80px 0;
+            background: var(--surface);
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .screenshot-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .screenshot-card:hover {
+            transform: scale(1.05) translateY(-4px);
+            box-shadow: 0 16px 32px rgba(0,0,0,0.2);
+        }
+
+        .screenshot-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .screenshot-info {
+            padding: var(--spacing-lg);
+        }
+
+        .screenshot-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text);
+        }
+
+        .screenshot-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, #1D4ED8 100%);
+            color: white;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .benefit-item {
+            text-align: center;
+            padding: var(--spacing-lg);
+        }
+
+        .benefit-number {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .benefit-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 80px 0;
+            background: var(--surface);
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-lg);
+            color: var(--text);
+        }
+
+        .cta p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: var(--spacing-2xl);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: var(--spacing-lg);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: var(--spacing-lg) var(--spacing-2xl);
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: calc(var(--spacing-lg) - 2px) calc(var(--spacing-2xl) - 2px);
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text);
+            color: white;
+            padding: var(--spacing-2xl) 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .footer-section h4 {
+            margin-bottom: var(--spacing-md);
+            color: var(--primary);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                height: 100vh;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .features-grid,
+            .problems-grid,
+            .screenshots-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.6s ease-out;
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Hover animations */
+        .problem-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .screenshot-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cta-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-secondary {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* About Section */
+        .about-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: var(--spacing-lg);
+            color: var(--primary);
+        }
+
+        .about-content > p {
+            font-size: 1.3rem;
+            margin-bottom: var(--spacing-2xl);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .features-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-xl);
+            margin: var(--spacing-2xl) 0;
+        }
+
+        .summary-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: var(--spacing-lg);
+            border-radius: 12px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .summary-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .summary-item h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            color: var(--primary);
+        }
+
+        .summary-item p {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        .about-content > p:last-of-type {
+            font-size: 1.1rem;
+            color: var(--text);
+            font-weight: 500;
+            margin-top: var(--spacing-lg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="logo">
+                <img src="images/logo.png" alt="نظام إدارة المبيعات">
+                <span>نظام إدارة المبيعات</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">الرئيسية</a></li>
+                <li><a href="#features">المميزات</a></li>
+                <li><a href="#screenshots">الصور</a></li>
+                <li><a href="#contact">اتصل بنا</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content fade-in-up">
+                <div class="hero-image">
+                    <img src="images/home.png" alt="نظام إدارة المبيعات">
+                </div>
+                <h1>تطبيق متكامل لإدارة أعمالك</h1>
+                <p>تحكم كامل في المبيعات، المشتريات، الديون، والمخزون بواجهة سهلة وبسيطة</p>
+                <a href="https://erad-erp.vercel.app/" target="_blank" class="cta-button">
+                <!-- <span class="button-icon"></span> -->
+                ابدأ مجانًا
+            </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem">
+        <div class="container">
+            <h2 class="section-title">المشاكل التي تواجهها</h2>
+            <div class="problems-grid">
+                <div class="problem-card">
+                    <h3>فوضى في الفواتير</h3>
+                    <p>صعوبة في تتبع الفواتير والمدفوعات والديون المتأخرة</p>
+                </div>
+                <div class="problem-card">
+                    <h3>المخزون المجهول</h3>
+                    <p>لا تعرف كم لديك في المخزون وما الذي ينفد قريباً</p>
+                </div>
+                <div class="problem-card">
+                    <h3>الديون غير المنظمة</h3>
+                    <p>نسيان الديون وعدم معرفة من يدين لك ومتى</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution" id="features">
+        <div class="container">
+            <h2 class="section-title">الحل المتكامل</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>إدارة العملاء</h3>
+                    <p>إضافة عملاء، تحديد سقف ائتماني، تتبع الرصيد الحالي، وإجمالي المشتريات مع إمكانية التفعيل والتعطيل</p>
+                </div>
+                <div class="feature-card">
+                    <h3>إدارة الموردين</h3>
+                    <p>إضافة موردين، تتبع ديون الموردين، وإحصاء تلقائي للمشتريات من كل مورد</p>
+                </div>
+                <div class="feature-card">
+                    <h3>إدارة المنتجات</h3>
+                    <p>إضافة منتجات، إدارة المخزون، تحديد الأسعار، الفئات، ومواقع التخزين</p>
+                </div>
+                <div class="feature-card">
+                    <h3>فواتير البيع</h3>
+                    <p>إنشاء فواتير بيع مع ضرائب وخصومات، نظام الديون والنقدي، وتتبع حالة الدفع</p>
+                </div>
+                <div class="feature-card">
+                    <h3>فواتير المشتريات</h3>
+                    <p>إنشاء فواتير شراء، تتبع المدفوعات، وإدارة الديون على الموردين</p>
+                </div>
+                <div class="feature-card">
+                    <h3>المدفوعات والمصروفات</h3>
+                    <p>تسجيل الدفعات، المصروفات، والسحوبات مع تصنيفها وتتبعها</p>
+                </div>
+                <div class="feature-card">
+                    <h3>التقارير والتحليلات</h3>
+                    <p>تحليل ديون العملاء، تقرير مبيعات شهري، وأكثر المنتجات مبيعاً</p>
+                </div>
+                <div class="feature-card">
+                    <h3>حركة المخزون</h3>
+                    <p>تتبع تلقائي لكل حركة مخزون مع الكميات والأسعار والمراجع</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshots Section -->
+    <section class="screenshots" id="screenshots">
+        <div class="container">
+            <h2 class="section-title">نظرة على النظام</h2>
+            <div class="screenshots-grid">
+                <div class="screenshot-card">
+                    <img src="images/home.png" alt="الواجهة الرئيسية">
+                    <div class="screenshot-info">
+                        <h3>الواجهة الرئيسية</h3>
+                        <p>لوحة تحكم متكاملة تعرض كل ما تحتاجه في مكان واحد</p>
+                    </div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="images/invoices.png" alt="الفواتير">
+                    <div class="screenshot-info">
+                        <h3>إدارة الفواتير</h3>
+                        <p>إنشاء وإدارة فواتير البيع والشراء بسهولة</p>
+                    </div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="images/products.png" alt="المنتجات">
+                    <div class="screenshot-info">
+                        <h3>إدارة المنتجات</h3>
+                        <p>تحكم كامل في المنتجات والمخزون</p>
+                    </div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="images/expenses.png" alt="المصروفات">
+                    <div class="screenshot-info">
+                        <h3>المصروفات والمدفوعات</h3>
+                        <p>تتبع جميع المصروفات والمدفوعات والسحوبات</p>
+                    </div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="images/invoices_pdf.png" alt="تصدير الفواتير">
+                    <div class="screenshot-info">
+                        <h3>تصدير الفواتير</h3>
+                        <p>تصدير الفواتير بصيغة PDF للطباعة والإرسال</p>
+                    </div>
+                </div>
+                <div class="screenshot-card">
+                    <img src="images/withdrawals.png" alt="السحوبات">
+                    <div class="screenshot-info">
+                        <h3>إدارة السحوبات</h3>
+                        <p>تسجيل وتتبع جميع السحوبات النقدية</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">نتائج حقيقية</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-number">100%</div>
+                    <div class="benefit-text">تحكم في عملياتك</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-number">24/7</div>
+                    <div class="benefit-text">وصول لبياناتك</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-number">0</div>
+                    <div class="benefit-text">فواتير منسية</div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-number">360°</div>
+                    <div class="benefit-text">رؤية كاملة للأعمال</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="solution">
+        <div class="container">
+            <div class="about-content">
+                <h2>نظامك المتكامل لإدارة الأعمال</h2>
+                <p>هل تعاني من فوضى الفواتير والمخزون والديون؟ نظامنا يحل كل هذه المشاكل في مكان واحد.</p>
+                
+                <div class="features-summary">
+                    <div class="summary-item">
+                        <h4>فواتير ذكية</h4>
+                        <p>إنشاء وإدارة فواتير البيع والشراء بسهولة</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>مخزون منظم</h4>
+                        <p>تتبع كامل للكميات والأسعار والحركات</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>ديون تحت السيطرة</h4>
+                        <p>معرفة ديون العملاء والموردين في أي وقت</p>
+                    </div>
+                    <div class="summary-item">
+                        <h4>تقارير واضحة</h4>
+                        <p>تحليلات شاملة للمبيعات والأرباح</p>
+                    </div>
+                </div>
+                
+                <p>واجهة بسيطة • تقارير واضحة • تحكم كامل</p>
+                <p>طريقة سهلة لإدارة أعمالك بدون تعقيدات</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="contact">
+        <div class="container">
+            <h2>هل أنت مستعد للبدء؟</h2>
+            <p>انضم إلى آلاف العملاء الذين نظموا أعمالهم بنظامنا</p>
+            <div class="cta-buttons">
+                <a href="https://erad-erp.vercel.app/" target="_blank" class="btn-primary">
+                    
+                    ابدأ مجانًا
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>النظام</h4>
+                    <ul>
+                        <li><a href="#features">المميزات</a></li>
+                        <li><a href="#screenshots">الصور</a></li>
+                        <li><a href="#contact">اتصل بنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>الدعم</h4>
+                    <ul>
+                        <li><a href="#">الدليل</a></li>
+                        <li><a href="#">الأسئلة الشائعة</a></li>
+                        <li><a href="#">الدعم الفني</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>تواصل معنا</h4>
+                    <ul>
+                        <li>البريد: info@system.com</li>
+                        <li>الهاتف: +966 50 123 4567</li>
+                        <li>واتساب: +966 50 123 4567</li>
+                    </ul>
+                </div>
+            </div>
+            <p>&copy; 2024 نظام إدارة المبيعات والمشتريات والديون. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Show header on scroll
+        let lastScrollTop = 0;
+        const header = document.querySelector('.header');
+        let headerShown = false;
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Show header when scrolling down from hero section
+            if (scrollTop > 100 && !headerShown) {
+                header.classList.add('visible');
+                headerShown = true;
+            } else if (scrollTop <= 100 && headerShown) {
+                header.classList.remove('visible');
+                headerShown = false;
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animations on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        // Different animations for different elements
+                        if (entry.target.classList.contains('problem-card')) {
+                            entry.target.classList.add('fade-in-up');
+                        } else if (entry.target.classList.contains('feature-card')) {
+                            entry.target.classList.add('slide-in-left');
+                        } else if (entry.target.classList.contains('screenshot-card')) {
+                            entry.target.classList.add('scale-in');
+                        } else if (entry.target.classList.contains('benefit-item')) {
+                            entry.target.classList.add('fade-in');
+                        } else {
+                            entry.target.classList.add('fade-in-up');
+                        }
+                    }, index * 100); // Stagger animations
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const elementsToAnimate = [
+                '.problem-card',
+                '.feature-card', 
+                '.screenshot-card',
+                '.benefit-item',
+                '.section-title',
+                '.about-content',
+                '.summary-item',
+                '.cta h2',
+                '.cta p'
+            ];
+            
+            elementsToAnimate.forEach(selector => {
+                document.querySelectorAll(selector).forEach(el => {
+                    observer.observe(el);
+                });
+            });
+
+            // Hero content animation on load
+            setTimeout(() => {
+                document.querySelector('.hero-content').classList.add('fade-in-up');
+            }, 300);
+        });
+
+        // Add parallax effect to hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            const heroContent = document.querySelector('.hero-content');
+            
+            if (hero && heroContent && scrolled < window.innerHeight) {
+                heroContent.style.transform = `translateY(${scrolled * 0.5}px)`;
+                heroContent.style.opacity = 1 - (scrolled / window.innerHeight) * 0.5;
+            }
+        });
+    </script>
+</body>
+</html>
